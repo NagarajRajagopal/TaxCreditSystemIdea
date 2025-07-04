@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>வரி கிரெடிட் அமைப்பு - ஒரு புதிய பாதை</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arima:wght@400;700&family=Hind+Madurai:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Amber, Slate, Teal) -->
+    <!-- Application Structure Plan: The SPA is designed as a narrative journey to explain a new policy idea. It starts with a Hero section to grab attention, followed by an interactive slider to explain the core concept ('How it works'). Then, card-based layouts present the 'Benefits' and 'Use Cases' for clarity. A simple HTML/CSS diagram shows the 'Implementation Roadmap'. A Chart.js doughnut chart visualizes the tax distribution. A new Gemini-powered Q&A section is added to allow for dynamic user interaction and personalized information. This top-down, story-telling structure is persuasive and easy for a general audience to understand. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Tax-to-Credit ratio. Goal: Engage/Inform. Viz: Interactive Slider. Method: HTML Range Input + JS.
+        - Report Info: Benefits. Goal: Inform. Viz: Card layout with icons. Method: HTML/Tailwind.
+        - Report Info: Example Uses. Goal: Organize/Inform. Viz: Tabbed Content. Method: HTML/Tailwind + JS.
+        - Report Info: Tax money distribution. Goal: Visualize Proportion. Viz: Doughnut Chart. Library: Chart.js/Canvas.
+        - Report Info: Implementation Steps. Goal: Organize. Viz: HTML/CSS process flow. Method: HTML/Tailwind.
+        - New Feature: User Questions. Goal: Interact/Personalize. Viz: Input form + Response area. Method: Gemini API call via JS Fetch.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Hind Madurai', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Arima', cursive;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        .tab-active {
+            border-bottom-color: #14b8a6;
+            color: #0f766e;
+            font-weight: 700;
+        }
+        .step-connector {
+            flex-grow: 1;
+            height: 2px;
+            background-color: #94a3b8;
+        }
+        .gemini-loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #14b8a6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-slate-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+
+        <!-- Hero Section -->
+        <header class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold text-teal-800 mb-4">வரிவிதிப்பின் புதிய பாதை</h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">நாம் செலுத்தும் வரிகளில் ஒரு பகுதி, அரசு சேவைகளைப் பெறக்கூடிய கிரெடிட்களாக நமக்கே திரும்ப வந்தால் எப்படி இருக்கும்? ஒரு சிறிய யோசனை, ஒரு பெரிய மாற்றத்திற்கான தொடக்கமாக இருக்கலாம்.</p>
+        </header>
+
+        <!-- Interactive Concept Explanation -->
+        <section id="concept" class="mb-12 md:mb-20 bg-white rounded-2xl shadow-lg p-6 md:p-10">
+            <h2 class="text-3xl font-bold text-center mb-2 text-teal-700">யோசனை எப்படி செயல்படுகிறது?</h2>
+            <p class="text-center text-slate-600 mb-8">நீங்கள் செலுத்தும் வரியின் அடிப்படையில் உங்களுக்குக் கிடைக்கும் கிரெடிட் தொகையை இங்கே ஊடாடிப் பாருங்கள். இது ஒரு உதாரணமே.</p>
+            <div class="max-w-2xl mx-auto">
+                <div class="mb-6">
+                    <label for="tax-slider" class="block text-lg font-semibold mb-2">நீங்கள் செலுத்தும் வரி (₹): <span id="tax-value" class="font-bold text-teal-600">5000</span></label>
+                    <input id="tax-slider" type="range" min="500" max="10000" value="5000" step="500" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color: #14b8a6;">
+                </div>
+                <div class="text-center bg-amber-100 p-6 rounded-xl border border-amber-200">
+                    <p class="text-lg text-slate-700">உங்களுக்கு கிடைக்கும் கிரெடிட் தொகை</p>
+                    <p class="text-4xl font-bold text-teal-800">₹<span id="credit-value">2500</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits" class="mb-12 md:mb-20">
+            <h2 class="text-3xl font-bold text-center mb-8 text-teal-700">முக்கிய நன்மைகள்</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <div class="bg-white rounded-2xl shadow p-6 text-center transition-transform hover:scale-105">
+                    <div class="text-4xl mb-4">📈</div>
+                    <h3 class="text-xl font-bold mb-2">வரி செலுத்துவதில் ஆர்வம்</h3>
+                    <p class="text-slate-600">தங்கள் வரிப்பணம் நேரடியாகப் பயன்படுவதால் மக்கள் வரி செலுத்த ஊக்குவிக்கப்படுவார்கள்.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow p-6 text-center transition-transform hover:scale-105">
+                     <div class="text-4xl mb-4">🏛️</div>
+                    <h3 class="text-xl font-bold mb-2">அரசு சேவைகள் மேம்பாடு</h3>
+                    <p class="text-slate-600">சேவைகளின் பயன்பாடு அதிகரித்து, அதன் தரம் மற்றும் உள்கட்டமைப்பு மேம்படும்.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow p-6 text-center transition-transform hover:scale-105">
+                     <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-xl font-bold mb-2">சமத்துவம் & நேரடி நன்மை</h3>
+                    <p class="text-slate-600">அனைத்து குடிமக்களும் வரிவிதிப்பு அமைப்பிலிருந்து நேரடிப் பலன்களைப் பெறுவார்கள்.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow p-6 text-center transition-transform hover:scale-105">
+                     <div class="text-4xl mb-4">💼</div>
+                    <h3 class="text-xl font-bold mb-2">பொருளாதார வளர்ச்சி</h3>
+                    <p class="text-slate-600">அதிகரித்த பணப்புழக்கம் மற்றும் நுகர்வு மூலம் புதிய வேலை வாய்ப்புகள் உருவாகும்.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases Section -->
+        <section id="uses" class="mb-12 md:mb-20">
+            <h2 class="text-3xl font-bold text-center mb-8 text-teal-700">கிரெடிட்களின் உதாரண பயன்பாடுகள்</h2>
+            <p class="text-center text-slate-600 mb-8 max-w-2xl mx-auto">இந்த கிரெடிட்களை மக்கள் தங்கள் அன்றாட வாழ்க்கையில் அத்தியாவசிய சேவைகளுக்கு எவ்வாறு பயன்படுத்தலாம் என்பதைக் கண்டறியவும்.</p>
+            <div>
+                <div class="border-b border-slate-300 mb-6">
+                    <nav class="flex justify-center -mb-px space-x-6 md:space-x-8" aria-label="Tabs">
+                        <button class="tab-btn tab-active py-4 px-1 border-b-2 font-medium text-lg" data-tab="transport">🚌 போக்குவரத்து</button>
+                        <button class="tab-btn py-4 px-1 border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 font-medium text-lg" data-tab="health">🏥 மருத்துவம்</button>
+                        <button class="tab-btn py-4 px-1 border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 font-medium text-lg" data-tab="education">🎓 கல்வி</button>
+                    </nav>
+                </div>
+                <div id="tab-content" class="max-w-4xl mx-auto">
+                    <div class="tab-pane active" id="transport">
+                        <div class="bg-white rounded-2xl shadow-md p-8 grid md:grid-cols-2 gap-6 items-center">
+                            <div class="text-center md:text-left">
+                                <h3 class="text-2xl font-bold text-teal-700 mb-3">பொதுப் போக்குவரத்து</h3>
+                                <p class="text-slate-600">அரசுப் பேருந்துகள், ரயில்கள் போன்றவற்றில் பயணக்கட்டணத்திற்கு கிரெடிட்களைப் பயன்படுத்தி தள்ளுபடி பெறலாம். இது பொதுப் போக்குவரத்தின் பயன்பாட்டை ஊக்குவிக்கும்.</p>
+                            </div>
+                            <div class="text-6xl text-center text-teal-500">🚍</div>
+                        </div>
+                    </div>
+                    <div class="tab-pane hidden" id="health">
+                         <div class="bg-white rounded-2xl shadow-md p-8 grid md:grid-cols-2 gap-6 items-center">
+                            <div class="text-center md:text-left">
+                                <h3 class="text-2xl font-bold text-teal-700 mb-3">அரசு மருத்துவமனைகள்</h3>
+                                <p class="text-slate-600">அரசு மருத்துவமனைகளில் செய்யப்படும் சிகிச்சைகள், மருந்துகள் மற்றும் மருத்துவப் பரிசோதனைகளுக்கு கிரெடிட்களைப் பயன்படுத்தலாம். இது சுகாதாரத்தை அனைவருக்கும் அணுகக்கூடியதாக மாற்றும்.</p>
+                            </div>
+                             <div class="text-6xl text-center text-teal-500">🩺</div>
+                        </div>
+                    </div>
+                    <div class="tab-pane hidden" id="education">
+                        <div class="bg-white rounded-2xl shadow-md p-8 grid md:grid-cols-2 gap-6 items-center">
+                            <div class="text-center md:text-left">
+                                <h3 class="text-2xl font-bold text-teal-700 mb-3">கல்வி மற்றும் பயிற்சி</h3>
+                                <p class="text-slate-600">அரசு நடத்தும் தொழிற்பயிற்சி மையங்கள், திறன் மேம்பாட்டு படிப்புகள் மற்றும் கல்விக் கட்டணங்களுக்கு இந்த கிரெடிட்கள் உதவும். இது கற்றலை ஊக்குவிக்கும்.</p>
+                            </div>
+                            <div class="text-6xl text-center text-teal-500">📖</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualization and Implementation Section -->
+        <section id="implementation" class="mb-12 md:mb-20">
+             <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h2 class="text-3xl font-bold text-center mb-2 text-teal-700">வரிப் பங்கீடு</h2>
+                     <p class="text-center text-slate-600 mb-6">உங்கள் வரிப் பணம் எவ்வாறு பிரிக்கப்படலாம் என்பதற்கான ஒரு காட்சி விளக்கம்.</p>
+                    <div class="chart-container">
+                        <canvas id="taxDistributionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="w-full">
+                    <h2 class="text-3xl font-bold text-center lg:text-left mb-8 text-teal-700">செயல்படுத்தும் வழிமுறைகள்</h2>
+                    <div class="space-y-8">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-teal-600 text-white text-xl font-bold rounded-full flex items-center justify-center">1</div>
+                            <div>
+                                <h3 class="text-xl font-bold">தொழில்நுட்ப கட்டமைப்பு</h3>
+                                <p class="text-slate-600">ஒவ்வொரு குடிமகனுக்கும் பாதுகாப்பான கிரெடிட் கணக்கை நிர்வகிக்க ஒரு வலுவான தகவல் தொழில்நுட்ப அமைப்பு.</p>
+                            </div>
+                        </div>
+                         <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-teal-600 text-white text-xl font-bold rounded-full flex items-center justify-center">2</div>
+                            <div>
+                                <h3 class="text-xl font-bold">தெளிவான விதிமுறைகள்</h3>
+                                <p class="text-slate-600">கிரெடிட்களைப் பயன்படுத்துவதற்கான தெளிவான வழிகாட்டுதல்கள் மற்றும் தவறான பயன்பாட்டைத் தடுக்கும் விதிகள்.</p>
+                            </div>
+                        </div>
+                         <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-teal-600 text-white text-xl font-bold rounded-full flex items-center justify-center">3</div>
+                            <div>
+                                <h3 class="text-xl font-bold">மக்கள் விழிப்புணர்வு</h3>
+                                <p class="text-slate-600">இந்தத் திட்டத்தின் நன்மைகள் மற்றும் பயன்பாடு குறித்து மக்களுக்கு எளிய முறையில் விளக்கும் பிரச்சாரங்கள்.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-teal-600 text-white text-xl font-bold rounded-full flex items-center justify-center">4</div>
+                            <div>
+                                <h3 class="text-xl font-bold">நிதி சமநிலை</h3>
+                                <p class="text-slate-600">தற்போதைய அரசு சேவைகள் பாதிக்கப்படாத வகையில் நிதிநிலையை கவனமாக சமநிலைப்படுத்துதல்.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gemini Q&A Section -->
+        <section id="qna" class="mb-12 md:mb-20 bg-white rounded-2xl shadow-lg p-6 md:p-10">
+            <h2 class="text-3xl font-bold text-center mb-2 text-teal-700">✨ உங்கள் கேள்விகள்?</h2>
+            <p class="text-center text-slate-600 mb-8 max-w-2xl mx-auto">இந்தத் திட்டம் குறித்து உங்களுக்கு ஏதேனும் கேள்விகள் இருந்தால், இங்கே கேட்கவும். ஜெமினி உங்களுக்கு பதிலளிக்கும்.</p>
+            <div class="max-w-2xl mx-auto">
+                <div class="flex flex-col sm:flex-row gap-2 mb-4">
+                    <input id="user-question" type="text" placeholder="உதாரணம்: இந்த திட்டம் மாணவர்களுக்கு எப்படி உதவும்?" class="flex-grow w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <button id="ask-gemini-btn" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-700 transition-colors">கேள்</button>
+                </div>
+                <div id="gemini-response-area" class="mt-4 p-4 bg-amber-100 rounded-lg min-h-[100px] border border-amber-200">
+                    <div id="gemini-loader" class="hidden mx-auto gemini-loader"></div>
+                    <p id="gemini-response" class="text-slate-700"></p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Conclusion -->
+        <footer class="text-center pt-8 border-t border-slate-300">
+            <h2 class="text-3xl font-bold text-teal-800 mb-4">ஒரு சிறந்த மாற்றத்திற்கான அழைப்பு</h2>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-6">இந்த யோசனை வரிவிதிப்பை ஊக்குவித்து, அரசு சேவைகளை மேம்படுத்தி, நாட்டின் வளர்ச்சிக்கு வழிவகுக்கும் ஒரு சக்திவாய்ந்த கருவியாக மாறும் ஆற்றல் கொண்டது. இந்த மாற்றத்திற்கான பயணத்தில் உங்கள் கருத்துக்களையும், ஆலோசனைகளையும் வரவேற்கிறோம்.</p>
+            <p class="text-sm text-slate-500">#TaxCreditSystem #InnovationForGood #TamilThoughts</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Interactive Slider Logic
+        const taxSlider = document.getElementById('tax-slider');
+        const taxValue = document.getElementById('tax-value');
+        const creditValue = document.getElementById('credit-value');
+
+        taxSlider.addEventListener('input', () => {
+            const taxAmount = parseInt(taxSlider.value);
+            const creditAmount = taxAmount * 0.5; // Example: 50% credit
+            taxValue.textContent = taxAmount.toLocaleString('en-IN');
+            creditValue.textContent = creditAmount.toLocaleString('en-IN');
+        });
+
+        // Tabs Logic
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.dataset.tab;
+
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('border-transparent', 'text-slate-500');
+                });
+                button.classList.add('tab-active');
+                button.classList.remove('border-transparent', 'text-slate-500');
+
+
+                tabPanes.forEach(pane => {
+                    if (pane.id === tabId) {
+                        pane.classList.remove('hidden');
+                        pane.classList.add('active');
+                    } else {
+                        pane.classList.add('hidden');
+                        pane.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Chart.js Doughnut Chart
+        const ctx = document.getElementById('taxDistributionChart').getContext('2d');
+        const taxDistributionChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['அரசு சேவைகளுக்கு', 'மக்களுக்கு கிரெடிட்'],
+                datasets: [{
+                    label: 'வரிப் பங்கீடு',
+                    data: [50, 50],
+                    backgroundColor: ['#5eead4', '#14b8a6'],
+                    borderColor: ['#fdfbf6'],
+                    borderWidth: 4,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                           font: { size: 14, family: "'Hind Madurai', sans-serif" },
+                           color: '#475569'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed !== null) { label += context.parsed + '%'; }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '60%'
+            }
+        });
+        
+        // Gemini API Integration
+        const askButton = document.getElementById('ask-gemini-btn');
+        const userQuestionInput = document.getElementById('user-question');
+        const geminiResponseEl = document.getElementById('gemini-response');
+        const geminiLoader = document.getElementById('gemini-loader');
+
+        askButton.addEventListener('click', async () => {
+            const userQuestion = userQuestionInput.value.trim();
+            if (!userQuestion) {
+                geminiResponseEl.textContent = 'கேள்வி கேட்பதற்கான இடத்தில் உங்கள் கேள்வியை உள்ளிடவும்.';
+                return;
+            }
+
+            geminiResponseEl.textContent = '';
+            geminiLoader.classList.remove('hidden');
+            askButton.disabled = true;
+
+            const policyContext = `நீங்கள் 'வரி கிரெடிட் அமைப்பு' என்ற புதிய கொள்கை யோசனை குறித்த ஒரு நிபுணர். இதன் முக்கிய கருத்து: ஒரு குடிமகன் வரி செலுத்தும் போது (எ.கா., ₹2000), அதன் ஒரு பகுதி (எ.கா., 50%, அதாவது ₹1000) 'கிரெடிட்' ஆக அவர்களுக்குத் திருப்பித் தரப்படுகிற
