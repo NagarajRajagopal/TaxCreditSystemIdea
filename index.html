@@ -75,10 +75,27 @@
             <h2 class="text-3xl font-bold text-center mb-2 text-teal-700">யோசனை எப்படி செயல்படுகிறது?</h2>
             <p class="text-center text-slate-600 mb-8">நீங்கள் செலுத்தும் வரியின் அடிப்படையில் உங்களுக்குக் கிடைக்கும் கிரெடிட் தொகையை இங்கே ஊடாடிப் பாருங்கள். இது ஒரு உதாரணமே.</p>
             <div class="max-w-2xl mx-auto">
-                <div class="mb-6">
-                    <label for="tax-slider" class="block text-lg font-semibold mb-2">நீங்கள் செலுத்தும் வரி (₹): <span id="tax-value" class="font-bold text-teal-600">5000</span></label>
-                    <input id="tax-slider" type="range" min="500" max="10000" value="5000" step="500" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color: #14b8a6;">
-                </div>
+               <div class="mb-6">
+    <label for="tax-slider" class="block text-lg font-semibold mb-2">
+        நீங்கள் செலுத்தும் வரி (₹): <span id="tax-value" class="font-bold text-teal-700">5000</span>
+    </label>
+    <div class="w-full flex items-center">
+        <input
+            id="tax-slider"
+            type="range"
+            min="500"
+            max="10000"
+            value="5000"
+            step="500"
+            class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500"
+            style="accent-color: #14b8a6;"
+        >
+    </div>
+    <div class="flex justify-between text-xs text-slate-400 mt-1">
+        <span>₹500</span>
+        <span>₹10,000</span>
+    </div>
+</div>
                 <div class="text-center bg-amber-100 p-6 rounded-xl border border-amber-200">
                     <p class="text-lg text-slate-700">உங்களுக்கு கிடைக்கும் கிரெடிட் தொகை</p>
                     <p class="text-4xl font-bold text-teal-800">₹<span id="credit-value">2500</span></p>
@@ -204,22 +221,6 @@
             </div>
         </section>
 
-        <!-- Gemini Q&A Section -->
-        <section id="qna" class="mb-12 md:mb-20 bg-white rounded-2xl shadow-lg p-6 md:p-10">
-            <h2 class="text-3xl font-bold text-center mb-2 text-teal-700">✨ உங்கள் கேள்விகள்?</h2>
-            <p class="text-center text-slate-600 mb-8 max-w-2xl mx-auto">இந்தத் திட்டம் குறித்து உங்களுக்கு ஏதேனும் கேள்விகள் இருந்தால், இங்கே கேட்கவும். ஜெமினி உங்களுக்கு பதிலளிக்கும்.</p>
-            <div class="max-w-2xl mx-auto">
-                <div class="flex flex-col sm:flex-row gap-2 mb-4">
-                    <input id="user-question" type="text" placeholder="உதாரணம்: இந்த திட்டம் மாணவர்களுக்கு எப்படி உதவும்?" class="flex-grow w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    <button id="ask-gemini-btn" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-700 transition-colors">கேள்</button>
-                </div>
-                <div id="gemini-response-area" class="mt-4 p-4 bg-amber-100 rounded-lg min-h-[100px] border border-amber-200">
-                    <div id="gemini-loader" class="hidden mx-auto gemini-loader"></div>
-                    <p id="gemini-response" class="text-slate-700"></p>
-                </div>
-            </div>
-        </section>
-
 <!-- Original LinkedIn Post Section -->
 <section class="mb-12 md:mb-20 bg-white rounded-2xl shadow-lg p-6 md:p-10">
     <h2 class="text-3xl font-bold text-center mb-4 text-teal-700">🔗 இயல்பான தொடக்கம்</h2>
@@ -235,6 +236,7 @@
     </p>
 </section>
 
+        
         <!-- Conclusion -->
         <footer class="text-center pt-8 border-t border-slate-300">
             <h2 class="text-3xl font-bold text-teal-800 mb-4">ஒரு சிறந்த மாற்றத்திற்கான அழைப்பு</h2>
@@ -244,6 +246,65 @@
 
     </div>
 
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: #14b8a6;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+input[type="range"]:focus::-webkit-slider-thumb {
+    background: #0f766e;
+}
+input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    background: #14b8a6;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+input[type="range"]:focus::-moz-range-thumb {
+    background: #0f766e;
+}
+input[type="range"]::-ms-thumb {
+    width: 24px;
+    height: 24px;
+    background: #14b8a6;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+input[type="range"]:focus::-ms-thumb {
+    background: #0f766e;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+    background: #e0e7ef;
+}
+input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: #e0e7ef;
+}
+input[type="range"]::-ms-fill-lower,
+input[type="range"]::-ms-fill-upper {
+    background: #e0e7ef;
+    border-radius: 3px;
+}
+input[type="range"]:focus {
+    outline: none;
+}
+    
     <script>
         // Interactive Slider Logic
         const taxSlider = document.getElementById('tax-slider');
